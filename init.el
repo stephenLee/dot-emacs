@@ -16,6 +16,10 @@
 ;; no backup
 (setq make-backup-files nil)
 
+;; Input Chinese, conflict with ibus short cut
+(global-unset-key (kbd "S-<SPC>"))
+;;(define-key (kbd "S-<SPC>") nil)
+
 ;; color theme(M-x package-install xx)
 (load-theme 'zenburn t)
 ;; (load-theme 'solarized-dark t)
@@ -65,6 +69,29 @@
 ;; ess
 (require 'ess-site)
 
+ ;; Clojure
+(require 'clojure-mode)
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(setq auto-mode-alist (cons '("\\.edn$" . clojure-mode) auto-mode-alist))  ; *.edn are Clojure files
+(setq auto-mode-alist (cons '("\\.cljs$" . clojure-mode) auto-mode-alist)) ; *.cljs are Clojure files
+ 
+;; nREPL customizations
+(require 'nrepl)
+(setq nrepl-hide-special-buffers t)                                        ; Don't show buffers like connection or server
+(setq nrepl-popup-on-error nil)                                            ; Don't popup new buffer for errors (show in nrepl buffer)
+(setq nrepl-popup-stacktraces-in-repl t)                                   ; Display stacktrace inline
+ 
+(add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)          ; Enable eldoc - shows fn argument list in echo area
+(add-hook 'nrepl-mode-hook 'paredit-mode)                                  ; Use paredit in *nrepl* buffer
+ 
+(add-to-list 'same-window-buffer-names "*nrepl*")                          ; Make C-c C-z switch to *nrepl*
+ 
+;; Scala
+;; Ensime
+(add-to-list 'load-path "/home/lxd/.emacs.d/ensime/elisp/")
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+
 ;; auctex
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -89,4 +116,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+'(font-lock-warning-face ((t (:inherit nil :foreground "red" :background nil))))
+'(linum-highlight-face ((t (:inherit default :background "color-238" :foreground "white"))))
+'(show-paren-match ((((class color) (background dark)) (:inherit nil :foreground "red")))))
